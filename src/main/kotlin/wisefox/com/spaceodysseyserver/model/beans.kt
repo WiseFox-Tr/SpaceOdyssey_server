@@ -9,16 +9,21 @@ data class QuestionBean(
     val quest_answer3: String?,
     val quest_answer4: String?,
     val quest_explanation: String,
-    val level: Level,
-    val theme: Theme,
+    val levelBean: LevelBean,
+    val themeBean: ThemeBean,
 )
 
-data class Level(
+data class QuizParamBean(
+    val levelBean: LevelBean,
+    val themeBean: ThemeBean,
+)
+
+data class LevelBean(
     val lvl_id: Byte,
     val lvl_name: String,
 )
 
-data class Theme(
+data class ThemeBean(
     val theme_id: Byte,
     val theme_name: String,
 )
