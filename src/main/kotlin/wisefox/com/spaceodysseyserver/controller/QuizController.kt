@@ -21,8 +21,8 @@ class QuizController {
         println("/testServer")
         return "Server is ok"
     }
-    
-    /* Json recieve for getQuestion *************
+
+    /* Json recieve for getQuestions *************
     {
       "levelBean": {
         "lvl_id": 1,
@@ -51,6 +51,9 @@ class QuizController {
 
     /* ********only for test before database ******** */
     fun addQuestions(): List<QuestionBean> {
+        //clear
+        questionsToSend.clear()
+        //first question good level & theme
         questionsToSend.add(QuestionBean(
             1,
             "Quelle est la première planète du système solaire ?",
@@ -58,10 +61,24 @@ class QuizController {
             "Venus",
             "la Terre",
             "Mars",
-            "Explication simple",
+            "Explication simple pour la première question",
             LevelBean(1, "Débutant"),
             ThemeBean(1, "Systèmes planétaires")
         ))
+        //second question good level & theme
+        questionsToSend.add(QuestionBean(
+            2,
+            "Quelle est la deuxième planète du système solaire ?",
+            "Venus",
+            "Mercure",
+            "Mars",
+            "Neptune",
+            "Explication simple pour la deuxième question",
+            LevelBean(1, "Débutant"),
+            ThemeBean(1, "Systèmes planétaires")
+        ))
+
+
         return questionsToSend
     }
 }
