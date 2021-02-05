@@ -13,7 +13,7 @@ data class QuestionBean(
     val themeBean: ThemeBean,
 )
 
-data class QuizParamBean(
+data class ParamsBean(
     val levelBean: LevelBean,
     val themeBean: ThemeBean,
 )
