@@ -1,35 +1,34 @@
 package wisefox.com.spaceodysseyserver.model
 
+import javax.persistence.*
 
+@Entity
+@Table(name = "Question")
 data class QuestionBean(
-    val quest_id: Long,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val quest_id: Int,
     val quest_content: String,
     val quest_answer1: String,
     val quest_answer2: String,
     val quest_answer3: String?,
     val quest_answer4: String?,
     val quest_explanation: String,
-    val level: LevelBean,
-    val theme: ThemeBean,
+    val lvl_id: Byte,
+    val theme_id: Byte,
 )
 
-data class ParamsBean(
-    val level: LevelBean,
-    val theme: ThemeBean,
-)
-
+@Entity
+@Table(name = "Level")
 data class LevelBean(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val lvl_id: Byte,
     val lvl_name: String,
 )
 
+@Entity
+@Table(name = "Theme")
 data class ThemeBean(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val theme_id: Byte,
     val theme_name: String,
-)
-
-data class ResponseCodeBean<T>(
-    val code: Int,
-    val message: String?,
-    val data: T? = null
 )
