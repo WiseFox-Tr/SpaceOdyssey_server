@@ -36,9 +36,9 @@ class QuizController {
     ******************************************* */
     //http://localhost:8080/getQuestions
     @PostMapping("getQuestions")
-    fun getQuestions(@RequestBody paramsBean: ParamsBean): ResponseCodeBean<List<QuestionBean>> {
+    fun getQuestions(@RequestBody params: ParamsBean): ResponseCodeBean<List<QuestionBean>> {
         traceServerRequest("/getQuestions")
-        print("Quiz param : $paramsBean")
+        print("Quiz param : $params")
 
         //todo: once the database will be up and running -> manage errors with a try catch bloc
 
@@ -77,7 +77,6 @@ class QuizController {
             LevelBean(1, "Débutant"),
             ThemeBean(1, "Systèmes planétaires")
         ))
-
 
         return questionsToSend
     }
