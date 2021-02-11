@@ -5,8 +5,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "Question")
 data class QuestionBean(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val quest_id: Int,
+    @Id val quest_id: Int,
     val quest_content: String,
     val quest_answer1: String,
     val quest_answer2: String,
