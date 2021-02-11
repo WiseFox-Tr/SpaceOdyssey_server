@@ -1,20 +1,15 @@
 package wisefox.com.spaceodysseyserver.controller
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import wisefox.com.spaceodysseyserver.model.*
-import wisefox.com.spaceodysseyserver.model.QuizDAO
 import wisefox.com.spaceodysseyserver.utils.traceServerRequest
 
 
 @RestController
-class QuizController(@Autowired val quizDAO: QuizDAO) {
-
-    //waiting for implementation of the database
-    var questionsToSend = ArrayList<QuestionBean>()
+class QuizController(val quizDAO: QuizDAO) {
 
     //http://localhost:8080/testServer
     @GetMapping("/testServer")
@@ -23,7 +18,7 @@ class QuizController(@Autowired val quizDAO: QuizDAO) {
         return "Server is ok"
     }
 
-    /* Json recieve for getQuestions *************
+    /* Example of Json send by client for getQuestions *************
     {
       "level": {
         "lvl_id": 1,
@@ -37,15 +32,34 @@ class QuizController(@Autowired val quizDAO: QuizDAO) {
     ******************************************* */
     //http://localhost:8080/getQuestions
     @PostMapping("getQuestions")
-    fun getQuestions(@RequestBody params: Params): ResponseCode<List<QuestionBean>> {
+    fun getQuestions(@RequestBody params: ParamsBean): ServerResponseBean<List<QuestionBean>> {
         traceServerRequest("/getQuestions")
         print("Quiz param : $params")
 
-        //todo: once the database will be up and running -> manage errors with a try catch bloc
+        val questionsRetrieved: ArrayList<QuestionBean>
+        val questionsToSend : List<QuestionBean>
 
-        //get questionsToSend & return them to client
-        val data = quizDAO.findQuestionsByLevelIdAndThemeId(params.level.lvl_id, params.theme.theme_id)
 
-        return ResponseCode(200, "", data)
+        //tries to get all questions corresponding to params received
+        //checks if there is at least 10 questions. Takes randomly 10 of them and return them to client
+        //if a problem occurs, returns an error message
+        try {
+            questionsRetrieved = quizDAO.findQuestionsByLevelIdAndThemeId(params.level.lvl_id, params.theme.theme_id)
+
+            if(questionsRetrieved.size < ServerConst.NB_QUESTIONS)
+                throw Exception("Not enough questions for these parameters")
+
+            questionsToSend = questionsRetrieved.shuffled().take(ServerConst.NB_QUESTIONS)
+
+            //control print
+            println("\nNb questions to send to client : ${questionsToSend.size} --> List of these : ")
+            questionsToSend.forEach { println("$it") }
+
+            return ServerResponseBean(200, "", questionsToSend)
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+            return ServerResponseBean(ServerConst.ERR_LACK_OF_QUEST, e.message)
+        }
     }
 }
