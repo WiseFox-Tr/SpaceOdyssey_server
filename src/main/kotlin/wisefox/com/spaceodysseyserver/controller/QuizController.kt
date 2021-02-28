@@ -32,12 +32,12 @@ class QuizController(val quizDAO: QuizDAO) {
     ******************************************* */
     //http://localhost:8080/getQuestions
     @PostMapping("getQuestions")
-    fun getQuestions(@RequestBody params: ParamsBean): ServerResponseBean<List<QuestionBean>> {
+    fun getQuestions(@RequestBody params: Params): ServerResponse<List<Question>> {
         traceServerRequest("/getQuestions")
         print("Quiz param : $params")
 
-        val questionsRetrieved: ArrayList<QuestionBean>
-        val questionsToSend : List<QuestionBean>
+        val questionsRetrieved: ArrayList<Question>
+        val questionsToSend : List<Question>
 
 
         //tries to get all questions corresponding to params received
@@ -55,11 +55,11 @@ class QuizController(val quizDAO: QuizDAO) {
             println("\nNb questions to send to client : ${questionsToSend.size} --> List of these : ")
             questionsToSend.forEach { println("$it") }
 
-            return ServerResponseBean(200, "", questionsToSend)
+            return ServerResponse(200, "", questionsToSend)
         }
         catch (e: Exception) {
             e.printStackTrace()
-            return ServerResponseBean(ServerConst.ERR_LACK_OF_QUEST, e.message)
+            return ServerResponse(ServerConst.ERR_QUEST, e.message)
         }
     }
 }
