@@ -36,6 +36,6 @@ data class ServerResponse<T>(
 )
 
 data class Params(
-    val level: Level,
-    val theme: Theme,
+    val levels: List<Level>,
+    val themes: List<Theme>,
 )
