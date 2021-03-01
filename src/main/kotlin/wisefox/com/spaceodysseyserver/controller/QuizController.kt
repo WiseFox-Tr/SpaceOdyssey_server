@@ -44,7 +44,7 @@ class QuizController(val quizDAO: QuizDAO) {
         //checks if there is at least 10 questions. Takes randomly 10 of them and return them to client
         //if a problem occurs, returns an error message
         try {
-            questionsRetrieved = quizDAO.findQuestionsByLevelIdAndThemeId(params.level.lvl_id, params.theme.theme_id)
+            questionsRetrieved = quizDAO.findQuestionsByLevelIdAndThemeId(params.levels[0].lvl_id, params.themes[0].theme_id)
 
             if(questionsRetrieved.size < ServerConst.NB_QUESTIONS)
                 throw Exception("Not enough questions for these parameters")
@@ -59,7 +59,7 @@ class QuizController(val quizDAO: QuizDAO) {
         }
         catch (e: Exception) {
             e.printStackTrace()
-            return ServerResponse(ServerConst.ERR_QUEST, e.message)
+            return ServerResponse(code = ServerConst.ERR_QUEST, message = e.message, data = null)
         }
     }
 }
