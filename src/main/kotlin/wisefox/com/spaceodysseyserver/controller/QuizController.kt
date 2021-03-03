@@ -5,11 +5,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import wisefox.com.spaceodysseyserver.model.*
+import wisefox.com.spaceodysseyserver.model.dao.LevelDAO
+import wisefox.com.spaceodysseyserver.model.dao.QuizDAO
+import wisefox.com.spaceodysseyserver.model.dao.ThemeDAO
 import wisefox.com.spaceodysseyserver.utils.traceServerRequest
 
 
 @RestController
-class QuizController(val quizDAO: QuizDAO) {
+class QuizController(val quizDAO: QuizDAO, val themeDAO: ThemeDAO, val levelDAO: LevelDAO) {
 
     //http://localhost:8080/testServer
     @GetMapping("/testServer")
@@ -62,4 +65,22 @@ class QuizController(val quizDAO: QuizDAO) {
             return ServerResponse(code = ServerConst.ERR_QUEST, message = e.message, data = null)
         }
     }
+
+    //http://localhost:8080/getParams
+    @GetMapping("/getParams")
+    fun getParams(): ServerResponse<Params> {
+        traceServerRequest("/getParams")
+        return try {
+            val paramsRetrieved = Params(levels = levelDAO.findAll(), themes = themeDAO.findAll())
+            println("Params retrieved : $paramsRetrieved")
+            ServerResponse(code = 200, message = "", paramsRetrieved)
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+            ServerResponse(code = ServerConst.ERR_PARAMS, message = e.message, data = null)
+        }
+
+    }
+
+
 }
