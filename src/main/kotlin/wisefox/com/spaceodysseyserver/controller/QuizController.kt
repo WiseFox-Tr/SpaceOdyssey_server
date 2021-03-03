@@ -21,6 +21,21 @@ class QuizController(val quizDAO: QuizDAO, val themeDAO: ThemeDAO, val levelDAO:
         return "Server is ok"
     }
 
+    //http://localhost:8080/getParams
+    @GetMapping("/getParams")
+    fun getParams(): ServerResponse<Params> {
+        traceServerRequest("/getParams")
+        return try {
+            val paramsRetrieved = Params(levels = levelDAO.findAll(), themes = themeDAO.findAll())
+            println("Params retrieved : $paramsRetrieved")
+            ServerResponse(code = 200, message = "", paramsRetrieved)
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+            ServerResponse(code = ServerConst.ERR_PARAMS, message = e.message, data = null)
+        }
+    }
+
     /* Example of Json send by client for getQuestions *************
     {
       "level": {
@@ -33,7 +48,7 @@ class QuizController(val quizDAO: QuizDAO, val themeDAO: ThemeDAO, val levelDAO:
       }
     }
     ******************************************* */
-    //http://localhost:8080/getQuestions
+    /** url : http://localhost:8080/getQuestions */
     @PostMapping("getQuestions")
     fun getQuestions(@RequestBody params: Params): ServerResponse<List<Question>> {
         traceServerRequest("/getQuestions")
@@ -65,22 +80,4 @@ class QuizController(val quizDAO: QuizDAO, val themeDAO: ThemeDAO, val levelDAO:
             return ServerResponse(code = ServerConst.ERR_QUEST, message = e.message, data = null)
         }
     }
-
-    //http://localhost:8080/getParams
-    @GetMapping("/getParams")
-    fun getParams(): ServerResponse<Params> {
-        traceServerRequest("/getParams")
-        return try {
-            val paramsRetrieved = Params(levels = levelDAO.findAll(), themes = themeDAO.findAll())
-            println("Params retrieved : $paramsRetrieved")
-            ServerResponse(code = 200, message = "", paramsRetrieved)
-        }
-        catch (e: Exception) {
-            e.printStackTrace()
-            ServerResponse(code = ServerConst.ERR_PARAMS, message = e.message, data = null)
-        }
-
-    }
-
-
 }
